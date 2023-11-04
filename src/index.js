@@ -12,12 +12,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use("/api", router);
+
 // Routes
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to my API" });
 });
-
-app.use(router);
 
 // handling errors
 app.use((err, req, res, next) => {
