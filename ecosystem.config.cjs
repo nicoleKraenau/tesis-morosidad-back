@@ -1,5 +1,5 @@
 // Import the required modules using ESM syntax
-import { join } from 'path';
+const path = require('path');
 
 // Export the configuration object
 export default {
