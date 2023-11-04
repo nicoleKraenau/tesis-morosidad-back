@@ -2,12 +2,11 @@
 const path = require('path');
 
 // Export the configuration object
-export default {
+module.exports = {
   apps: [
     {
       name: "back",
-      // Use the full path to the npm binary
-      script: join(process.cwd(), 'node_modules', '.bin', 'npm'),
+      script: path.join(process.cwd(), 'node_modules', '.bin', 'npm'),
       args: "run prod",
     },
   ],
