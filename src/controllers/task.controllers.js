@@ -7,21 +7,42 @@ export const setDatosUsuario = async (req,res,next) => {
   res.json(usuario);
 }
 
-export const createusuario = async (req, res,next) => {
-     // Extraer valores del cuerpo de la solicitud
-     try {
-        const { nombre, email, contrasena } = req.body; 
-        const nuevousuario = await pool.query("INSERT INTO usuario(nombre,email,contrasena) VALUES($1,$2,$3) RETURNING *", [
-            nombre,
-        email,
-            contrasena
-            ]);
-            res.json(nuevousuario.rows[0]);
-     }catch(error){
-        next(error);
-     }
+export const createusuario = async (req, res, next) => {
+  console.log('holaeee'); // Registro al comienzo de la función
 
-  };
+  try {
+    const { nombre, email, contrasena } = req.body; 
+
+    console.log('Datos de la solicitud:', { nombre, email }); // Registro de datos recibidos
+
+    const nuevousuario = await pool.query("INSERT INTO usuario(nombre, email, contrasena) VALUES($1, $2, $3) RETURNING *", [
+      nombre,
+      email,
+      contrasena
+    ]);
+
+    console.log('Nuevo usuario creado:', nuevousuario.rows[0]); // Registro del nuevo usuario creado
+
+    res.json(nuevousuario.rows[0]);
+  } catch(error) {
+    console.error(error); // Imprimir el error en la consola
+    next(error);
+  }
+};
+
+
+export const getusuario = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const result = await pool.query(`SELECT * FROM usuario WHERE id_usuario $1`, [id]);
+    if(result.rows.length === 0 ) return res.status(404).json({
+      message: "usuario no encontrado"
+    })
+    res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const updateusuario = async (req, res,next) => {
     // Extraer valores del cuerpo de la solicitud

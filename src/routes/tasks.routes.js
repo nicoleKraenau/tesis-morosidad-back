@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createusuario, dataCorreos, login, setDatosUsuario, updateusuario} from "../controllers/task.controllers.js"
+import { createusuario, dataCorreos, login, setDatosUsuario, updateusuario,getusuario} from "../controllers/task.controllers.js"
 import { getCliente, updateCliente, getClientsbyDNI, getAllClientes, getAlldistritos,getAllregion,getAlleducativo,getAllestado,getAllmotivo, deleteCliente, deleteClientes, createcliente, getAllusuario, getDistrito, getRegion, getEstado, getEducativo, getMotivo, deleteAllClientes, getClientesbyNivelEducativo, getClientesbyMotivo, getClientesbyEstadoCivil, getClientesbyDistrito, getClientesbyRegion, getClientesbyMotivoDistrito, getClientesbyNivelEducativoDistrito, getClientesbyEstadoCivilDistrito, getClientesbyNivelEducativoRegion, getClientesbyMotivoRegion, getClientesbyEstadoCivilRegion, getDistritosbyRegion, getAllClientesbyRegion, getAllClientesbyDistrito} from "../controllers/cliente.controller.js"
 const router=Router();
 
@@ -15,6 +15,7 @@ router.get('/estado',getAllestado)
 router.get('/estado/:id',getEstado)
 router.get('/educativo',getAlleducativo)
 router.get('/educativo/:id',getEducativo)
+router.get('/usuarios/:id',getusuario)
 router.get('/usuario',getAllusuario)
 router.put('/usuario',updateusuario)
 router.post('/usuario2',setDatosUsuario)

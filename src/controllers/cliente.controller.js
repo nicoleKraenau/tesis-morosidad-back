@@ -143,7 +143,11 @@ import { pool } from "../db.js";
   export const getClientesbyNivelEducativo = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_niveleducativo = $1`, [id]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_niveleducativo = $1 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;
+`, [id]);
       if(result.rows.length === 0 ) return res.status(404).json({
         message: "Cliente no encontrado"
       })
@@ -156,7 +160,11 @@ import { pool } from "../db.js";
   export const getClientesbyNivelEducativoDistrito = async (req, res, next) => {
     try {
       const {id, distrito} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_niveleducativo = $1 AND id_distrito = $2`, [id, distrito]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_niveleducativo = $1 
+      AND id_distrito = $2 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;`, [id, distrito]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -166,7 +174,13 @@ import { pool } from "../db.js";
   export const getClientesbyNivelEducativoRegion = async (req, res, next) => {
     try {
       const {id, region} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente JOIN distrito ON cliente.id_distrito = distrito.id_distrito JOIN region ON region.id_region = distrito.id_region WHERE cliente.id_niveleducativo = $1 AND region.id_region = $2`, [id, region]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      JOIN distrito ON cliente.id_distrito = distrito.id_distrito 
+      JOIN region ON region.id_region = distrito.id_region 
+      WHERE cliente.id_niveleducativo = $1 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2 
+      AND region.id_region = $2;`, [id, region]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -176,7 +190,10 @@ import { pool } from "../db.js";
   export const getClientesbyMotivo = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_motivo = $1`, [id]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_motivo = $1 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;`, [id]);
       if(result.rows.length === 0 ) return res.status(404).json({
         message: "Cliente no encontrado"
       })
@@ -189,7 +206,10 @@ import { pool } from "../db.js";
   export const getClientesbyMotivoDistrito = async (req, res, next) => {
     try {
       const {id, distrito} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_motivo = $1 and id_distrito = $2`, [id, distrito]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_motivo = $1 AND id_distrito = $2 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;`, [id, distrito]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -199,7 +219,14 @@ import { pool } from "../db.js";
   export const getClientesbyMotivoRegion = async (req, res, next) => {
     try {
       const {id, region} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente JOIN distrito ON cliente.id_distrito = distrito.id_distrito JOIN region ON region.id_region = distrito.id_region WHERE cliente.id_motivo = $1 AND region.id_region = $2`, [id, region]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      JOIN distrito ON cliente.id_distrito = distrito.id_distrito 
+      JOIN region ON region.id_region = distrito.id_region 
+      WHERE cliente.id_motivo = $1 
+      AND region.id_region = $2 
+      AND EXTRACT(YEAR FROM age(cliente.fecha_nacimiento)) < 27 
+      AND cliente.cantidad_propiedades < 2;
+      `, [id, region]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -209,7 +236,11 @@ import { pool } from "../db.js";
   export const getClientesbyEstadoCivil = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_estadocivil = $1`, [id]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_estadocivil = $1 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;
+      `, [id]);
       if(result.rows.length === 0 ) return res.status(404).json({
         message: "Cliente no encontrado"
       })
@@ -222,7 +253,12 @@ import { pool } from "../db.js";
   export const getClientesbyEstadoCivilDistrito = async (req, res, next) => {
     try {
       const {id, distrito} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_estadocivil = $1 AND id_distrito = $2`, [id, distrito]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_estadocivil = $1 
+      AND id_distrito = $2 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;
+      `, [id, distrito]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -232,7 +268,15 @@ import { pool } from "../db.js";
   export const getClientesbyEstadoCivilRegion = async (req, res, next) => {
     try {
       const {id, region} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente JOIN distrito ON cliente.id_distrito = distrito.id_distrito JOIN region ON region.id_region = distrito.id_region WHERE cliente.id_estadocivil = $1 AND region.id_region = $2`, [id, region]);
+      const result = await pool.query(`SELECT * 
+      FROM cliente 
+      JOIN distrito ON cliente.id_distrito = distrito.id_distrito 
+      JOIN region ON region.id_region = distrito.id_region 
+      WHERE cliente.id_estadocivil = $1 
+        AND region.id_region = $2 
+        AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+        AND cantidad_propiedades < 2;
+      `, [id, region]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -242,7 +286,10 @@ import { pool } from "../db.js";
   export const getClientesbyDistrito = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_distrito = $1`, [id]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_distrito = $1 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;`, [id]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -252,7 +299,10 @@ import { pool } from "../db.js";
   export const getAllClientesbyDistrito = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente WHERE id_distrito = $1`, [id]);
+      const result = await pool.query(`SELECT * FROM cliente 
+      WHERE id_distrito = $1 
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2`, [id]);
       if(result.rows.length === 0 ) return res.status(404).json({
         message: "Cliente no encontrado"
       })
@@ -265,7 +315,13 @@ import { pool } from "../db.js";
   export const getClientesbyRegion = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente JOIN distrito ON cliente.id_distrito = distrito.id_distrito JOIN region ON region.id_region = distrito.id_region WHERE region.id_region = $1`, [id]);
+      const result = await pool.query(`SELECT * 
+      FROM cliente 
+      JOIN distrito ON cliente.id_distrito = distrito.id_distrito 
+      JOIN region ON region.id_region = distrito.id_region 
+      WHERE region.id_region = $1
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2`, [id]);
       res.json(result.rows.length);
     } catch (error) {
       next(error);
@@ -275,7 +331,14 @@ import { pool } from "../db.js";
   export const getAllClientesbyRegion = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM cliente JOIN distrito ON cliente.id_distrito = distrito.id_distrito JOIN region ON region.id_region = distrito.id_region WHERE region.id_region = $1`, [id]);
+      const result = await pool.query(`SELECT * 
+      FROM cliente 
+      JOIN distrito ON cliente.id_distrito = distrito.id_distrito 
+      JOIN region ON region.id_region = distrito.id_region 
+      WHERE region.id_region = $1
+      AND EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27 
+      AND cantidad_propiedades < 2;
+      `, [id]);
       res.json(result.rows);
     } catch (error) {
       next(error);
@@ -285,7 +348,13 @@ import { pool } from "../db.js";
   export const getDistritosbyRegion = async (req, res, next) => {
     try {
       const {id} = req.params;
-      const result = await pool.query(`SELECT * FROM distrito WHERE id_region = $1`, [id]);
+      const result = await pool.query(`SELECT * FROM distrito
+      WHERE id_region = $1
+      AND id_distrito IN (
+        SELECT id_distrito FROM cliente
+        WHERE EXTRACT(YEAR FROM age(fecha_nacimiento)) < 27
+        AND cantidad_propiedades < 2
+      );`, [id]);
       res.json(result.rows);
     } catch (error) {
       next(error);
@@ -322,7 +391,7 @@ import { pool } from "../db.js";
         deudas,
         id_motivo, // Supongamos que esto es el motivo del préstamo
       } = req.body;
-
+console.log(req.body)
       // Función para buscar el ID de un elemento en una tabla por su nombre
       //const findIdInTable = async (tableName, columnName, value) => {
       //    const idtabla = "id_"+tableName;
@@ -366,12 +435,14 @@ import { pool } from "../db.js";
           genero,
           id_distrito.id_distrito, // Utiliza los IDs correspondientes
           id_usuario.id_usuario,
-          id_estadocivil.id_estado_civil,
-          id_niveleducativo.id_nivel_educativo,
+          id_estadocivil.id_estadocivil,
+          id_niveleducativo.id_niveleducativo,
           salario,
           deudas,
-          id_motivo.id_motivo_prestamo,
+          id_motivo.id_motivo,
+          
         ]
+        
       );
   
       // Devolver la respuesta completa
